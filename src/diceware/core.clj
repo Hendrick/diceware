@@ -4,7 +4,7 @@
   (:gen-class))
 
 (defn- wordlist
-  "Returns a future whose value will be a map 
+  "Returns a future whose value will be a map
   of die rolls to words"
   []
   (-> "wordlist.edn" io/resource slurp read-string))
@@ -22,7 +22,7 @@
          rng (SecureRandom/getInstance "SHA1PRNG")]
      (.setSeed rng now)
      (infinite-die-rolls rng)))
-  
+
   ([rng]
    (lazy-seq (cons (inc (.nextInt rng 6))
                    (infinite-die-rolls rng)))))
@@ -30,7 +30,7 @@
 (defn generate-passphrase
   "Generates a passphrase of n words"
   [n]
-  (->> (inifinite-die-rolls)
+  (->> (infinite-die-rolls)
        (partition 5)
        (take n)
        (map (partial die-rolls->word (future-call wordlist)))
